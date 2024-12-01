@@ -1,0 +1,17 @@
+{
+  "name": "aoc-2024",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "day": "node --experimental-strip-types --experimental-sqlite"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/node": "^22.10.1",
+    "typescript": "^5.7.2"
+  },
+  "type": "module"
+}

@@ -28,6 +28,8 @@ function processLine(line: string) {
 
 rl.on("line", processLine);
 
+let swap = ["-1", "-1"];
+
 function hasCorrectOrder(order: string[]) {
   const seen = new Set();
   const all = new Set([...order]);
@@ -35,6 +37,7 @@ function hasCorrectOrder(order: string[]) {
     seen.add(num);
     for (const mustAppearBefore of rules[num] || []) {
       if (!all.has(mustAppearBefore)) continue;
+      swap = [num, mustAppearBefore];  // who cares about side effect free functions
       if (!seen.has(mustAppearBefore)) return false;
     } 
   }
@@ -43,10 +46,22 @@ function hasCorrectOrder(order: string[]) {
 
 rl.on("close", () => {
   let total = 0;
+  let incorrectOrderTotal = 0;
   for (const order of orders) {
     if (hasCorrectOrder(order)) {
       total += Number.parseInt(order[(order.length  - 1) / 2]);
+    } else {
+      let newOrder = order;
+      while (!hasCorrectOrder(newOrder)) {
+        // who cares about efficiency
+        const firstIdx = newOrder.findIndex(val => val === swap[0]);
+        const secondIdx = newOrder.findIndex(val => val === swap[1]);
+        const temp = newOrder[firstIdx];
+        newOrder[firstIdx] = newOrder[secondIdx];
+        newOrder[secondIdx] = temp;
+      }
+      incorrectOrderTotal += Number.parseInt(newOrder[(newOrder.length  - 1) / 2]);
     }
   }
-  console.log(total);
+  console.log({total, incorrectOrderTotal});
 });
